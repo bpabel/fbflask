@@ -2,15 +2,6 @@
 
 
 // Utility functions.
-function getRandomColor2() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 
 function updateFeedGraph() {
     mybrendomatic.getMoreFeedData();
@@ -235,18 +226,13 @@ function graphPosts() {
 
         for (var i=0; i<datasets.length; i++) {
             var dataset = datasets[i];
-
-            console.log('MDataset ' + i.toString());
-            console.log(dataset);
-
             var found = false;
 
             for (var j=0; j<this.chart_posts.datasets.length; j++) {
                 var chart_dataset = this.chart_posts.datasets[j];
-                console.log('Dataset ' + j.toString());
-                console.log(chart_dataset);
+
                 if (dataset.label == chart_dataset.label) {
-                    console.log('MATCH ' + dataset.label + " " + chart_dataset.label);
+
                     // Update Existing series values
                     dataset.fillColor = chart_dataset.fillColor;
                     dataset.strokeColor = chart_dataset.strokeColor;

@@ -23,7 +23,7 @@
             </div>
 
             <div class="fb_button">
-                <fb:login-button autologoutlink="true" scope="public_profile,email,user_likes,user_tagged_places,read_stream,user_photos" onlogin="checkLoginState();"></fb:login-button>
+                <fb:login-button autologoutlink="true" scope="public_profile,user_tagged_places,read_stream" onlogin="checkLoginState();"></fb:login-button>
             </div>
 
             <div class="status">
@@ -32,14 +32,6 @@
 
         </section>
 
-        <!--
-        <section id="hmenu"> 
-            <ul> 
-                <li><a href="{{ url_for('graph', gtype='taggedplaces') }}">Javascript</a></li> 
-                <li><a href="{{ url_for('graph', gtype='taggedplaces') }}">Python</a></li> 
-            </ul>       
-        </section> 
-        -->
 
         <section id="content" class="center">{% block content %}{% endblock %}</section>
 
@@ -47,7 +39,6 @@
 
         <section class="footer">
           {% block footer %}
-          &copy; Copyright 2014 Brendan Abel
           {% endblock %}
         </section>
 
@@ -113,7 +104,7 @@
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
+            js.src = "http://connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
 
@@ -127,9 +118,6 @@
             });
 
             mybrendomatic = new Brendomatic();
-            Brendomatic.prototype.current = mybrendomatic
-            console.log("ORIG");
-            console.log(mybrendomatic)
             mybrendomatic.getFacebookData();
 
         }
