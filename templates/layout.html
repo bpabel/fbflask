@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+    <head>
+        {% block head %}
+        <link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+    
+        <script src="{{ url_for('static', filename='jquery.js') }}"></script>
+        <script src="{{ url_for('static', filename='Chart.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='brendomatic.js') }}"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+        <title>{% block title %}{% endblock %}Brendomatic</title>
+        {% endblock %}
+    </head>
+    <body>
+        <section class="title">
+
+            <div class="title_name" class="center">
+                <h1>Brendomatic</h1>
+            </div>
+
+            <div class="fb_button">
+                <fb:login-button autologoutlink="true" scope="public_profile,email,user_likes,user_tagged_places,read_stream,user_photos" onlogin="checkLoginState();"></fb:login-button>
+            </div>
+
+            <div class="status">
+            </div>
+
+
+        </section>
+
+        <!--
+        <section id="hmenu"> 
+            <ul> 
+                <li><a href="{{ url_for('graph', gtype='taggedplaces') }}">Javascript</a></li> 
+                <li><a href="{{ url_for('graph', gtype='taggedplaces') }}">Python</a></li> 
+            </ul>       
+        </section> 
+        -->
+
+        <section id="content" class="center">{% block content %}{% endblock %}</section>
+
+        <section class="graphs"></section>
+
+        <section class="footer">
+          {% block footer %}
+          &copy; Copyright 2014 Brendan Abel
+          {% endblock %}
+        </section>
+
+        
+        <script>
+
+        mybrendomatic = null;
+
+        // This is called with the results from from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+
+            // The response object is returned with a status field that lets the
+            // app know the current login status of the person.
+            // Full docs on the response object can be found in the documentation
+            // for FB.getLoginStatus().
+            if (response.status === 'connected') {
+                // Logged into your app and Facebook.
+                drawGraphs();
+            } else if (response.status === 'not_authorized') {
+                // The person is logged into Facebook, but not your app.
+                document.querySelector('.status').innerHTML = 'Please log into this app.';
+            } else {
+                // The person is not logged into Facebook, so we're not sure if
+                // they are logged into this app or not.
+                document.querySelector('.status').innerHTML = 'Please log into Facebook.';
+            }
+        }
+
+        // This function is called when someone finishes with the Login
+        // Button.  See the onlogin handler attached to it in the sample
+        // code below.
+        function checkLoginState() {
+            FB.getLoginStatus(statusChangeCallback);
+        }
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '340803792766773',
+                cookie     : true,  // enable cookies to allow the server to access
+                                    // the session
+                xfbml      : true,  // parse social plugins on this page
+                version    : 'v2.1' // use version 2.1
+            });
+
+            // Now that we've initialized the JavaScript SDK, we call
+            // FB.getLoginStatus().  This function gets the state of the
+            // person visiting this page and can return one of three states to
+            // the callback you provide.  They can be:
+            //
+            // 1. Logged into your app ('connected')
+            // 2. Logged into Facebook, but not your app ('not_authorized')
+            // 3. Not logged into Facebook and can't tell if they are logged into
+            //    your app or not.
+            //
+            // These three cases are handled in the callback function.
+
+            FB.getLoginStatus(statusChangeCallback);
+
+        };
+
+        // Load the SDK asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+
+    
+        // Here we run a very simple test of the Graph API after login is
+        // successful.  See statusChangeCallback() for when this call is made.
+        function drawGraphs() {
+            FB.api('/me', function(response) {
+                document.querySelector('.status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
+            });
+
+            mybrendomatic = new Brendomatic();
+            Brendomatic.prototype.current = mybrendomatic
+            console.log("ORIG");
+            console.log(mybrendomatic)
+            mybrendomatic.getFacebookData();
+
+        }
+
+        </script>
+
+    
+    </body>
+</html>
