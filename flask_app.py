@@ -13,11 +13,5 @@ def index():
     return render_template('layout.html')
 
 
-@app.route('/graph/<gtype>')
-def graph(gtype):
-	return render_template('layout.html')
-
-
-
 if __name__ == '__main__':
     app.run(debug=True)
