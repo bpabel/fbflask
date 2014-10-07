@@ -272,7 +272,11 @@ function graphPosts() {
         button.innerText = "Load More";
         button.setAttribute("onclick", "updateFeedGraph()");
         graph.appendChild(button);
+    } else if (this.posts_next_page == null) {
+        var button = document.querySelector(".graphs .graph#graph-posts button");
+        button.remove();
     }
+
 
     // Create legend for graph.
     var legend = document.querySelector(".graphs .graph#graph-posts .legend_labels");
