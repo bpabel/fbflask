@@ -27,7 +27,7 @@ function getFacebookData() {
 
 function getMoreFeedData() {
     if (this.posts_next_page) {
-        this.posts_next_lim = 3;
+        this.posts_next_lim = 5;
         var this_ = this;
         FB.api(this.posts_next_page, function(response){ this_.handleFeedResponse(response); });
     }
@@ -88,23 +88,35 @@ function handleTaggedPlacesResponse(response) {
 
 
 
-function createGraphDiv(graph_id, chart_id, title, legend_title, recreate, height, width) {
+function createGraphDiv(graph_id, chart_id, title, legend_title, recreate, height, width, recreate_canvas) {
 
-    var recreate = recreate === undefined ? true : recreate;
+    var recreate = recreate === undefined ? false : recreate;
+    var recreate_canvas = recreate_canvas === undefined ? true : recreate_canvas;
     var height = height === undefined ? 400 : height;
     var width = width === undefined ? 400 : width;
 
     var check = document.querySelector(".graphs .graph#" + graph_id);
-    if (check !== null) {
-        if (recreate) {
-            check.remove();
-        } else {
-            return null;
-        }
+    if (check && recreate) {
+        check.remove();
+        check = null;
+    } else if (check && !recreate_canvas) {
+        return null
+    } else if (check && recreate_canvas) {
+        var cholder = document.querySelector(".graphs .graph#" + graph_id + " .chart_holder");
+        var canvas = document.querySelector(".graphs .graph#" + graph_id + " canvas");
+        canvas.remove();
+
+        var canvas = document.createElement("canvas");
+        canvas.id = chart_id;
+        canvas.width = width;
+        canvas.height = height;
+        cholder.appendChild(canvas);
+        return null;
     }
+    console.log('Creating graph ' + graph_id);
 
     var graphs = document.querySelector(".graphs");
-    
+
     var graph = document.createElement("div");
     graph.className = "graph";
     graph.id = graph_id;
@@ -248,12 +260,13 @@ function graphPosts() {
     }
 
     // Draw graph.
-    createGraphDiv("graph-posts", "chart-posts", "Post Activity", "Year", true, 400, 600);
+    var check = document.querySelector(".graphs .graph#graph-posts");
+    createGraphDiv("graph-posts", "chart-posts", "Post Activity", "Year", false, 400, 600, true);
     var ctx = document.getElementById("chart-posts").getContext("2d");
     var mychart = new Chart(ctx).Line(chart_data);   
     this.chart_posts = mychart;
 
-    if (this.posts_next_page != null) {
+    if (!check && this.posts_next_page != null) {
         var graph = document.querySelector(".graphs .graph#graph-posts")
         var button = document.createElement("button");
         button.innerText = "Load More";
@@ -313,7 +326,7 @@ function graphTaggedPlaces() {
     };
 
     // Create div and canvas for graph.
-    createGraphDiv("graph-taggedplaces", "chart-taggedplaces", "Tagged Places", "City");
+    createGraphDiv("graph-taggedplaces", "chart-taggedplaces", "Tagged Places", "City", false, 400, 400, true);
 
     // Draw graph.
     var ctx = document.getElementById("chart-taggedplaces").getContext("2d");
