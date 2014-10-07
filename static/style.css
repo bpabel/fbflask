@@ -97,6 +97,12 @@ body {
 }
 
 
+.content {
+  color: white;
+  width: 800px;
+  margin: 30px auto;
+}
+
 .graph {
   clear: both;
 }
