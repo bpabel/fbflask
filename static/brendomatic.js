@@ -79,7 +79,8 @@ function handleTaggedPlacesResponse(response) {
     
     // Look for additional pages.  Get all tagged Places.
     if (response.data.length > 0 && response.paging && response.paging.next && response.paging.cursors.after) {
-        FB.api('me/tagged_places', {'after': response.paging.cursors.after}, this.handleTaggedPlacesResponse);
+        var this_ = this;
+        FB.api('me/tagged_places', {'after': response.paging.cursors.after}, function(response){ this_.handleTaggedPlacesResponse(response); });
     } else {
         this.graphTaggedPlaces(); 
    }
